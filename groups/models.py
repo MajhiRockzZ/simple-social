@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.urls import reverse
 from django import template
 from django.db import models
 from django.utils.text import slugify
+from django.core.urlresolvers import reverse
 
 import misaka
 
