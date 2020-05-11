@@ -17,7 +17,7 @@ class CreateGroup(LoginRequiredMixin, generic.CreateView):
     fields = ('name', 'description')
     model = Group
 
-class SingleGroup(generic.DeleteView):
+class SingleGroup(generic.DetailView):
     model = Group
 
 class ListGroups(generic.ListView):
@@ -36,6 +36,7 @@ class JoinGroup(LoginRequiredMixin, generic.RedirectView):
             messages.warning(self.request, 'Warning already a member!')
         else:
             messages.success(self.request, 'You are now a member!')
+        return super(JoinGroup, self).get(request, *args, **kwargs)
 
 
 class LeaveGroup(LoginRequiredMixin, generic.RedirectView):
@@ -46,11 +47,11 @@ class LeaveGroup(LoginRequiredMixin, generic.RedirectView):
         try:
             membership = models.GroupMember.objects.filter(
                 user=self.request.user,
-                group_slug=self.kwargs.get('slug')
+                group__slug=self.kwargs.get('slug')
             ).get()
         except models.GroupMember.DoesNotExist:
             messages.warning(self.request, 'Sorry you are not in this group!')
         else:
             membership.delete()
             messages.success(self.request, 'You have left the group!')
-        return super().get(request, *args, **kwargs)
+        return super(LeaveGroup, self).get(request, *args, **kwargs)
